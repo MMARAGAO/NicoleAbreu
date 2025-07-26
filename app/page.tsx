@@ -214,7 +214,7 @@ export default function HomePage() {
           <img
             src="/profile.jpg"
             alt="Nicole Abreu"
-            className="w-full h-full object-cover mask-b-from-20% mask-b-to-80%"
+            className="w-full h-full object-cover mask-b-from-20% mask-b-to-80% md:object-contain"
           />
           {/* logo */}
           <img
@@ -288,7 +288,7 @@ export default function HomePage() {
       {/* Content Sections */}
       <div className="max-w-6xl mx-auto px-6 py-12 space-y-16">
         {/* About Section */}
-        <section className="text-left space-y-6">
+        <section className="text-center space-y-6">
           <h2 className="text-3xl font-bold text-white mb-8">Sobre Mim</h2>
           <div className="grid md:grid-cols-2 gap-4 text-stone-300">
             <div className="space-y-4">
@@ -322,7 +322,7 @@ export default function HomePage() {
 
         {/* Services Section */}
         <section>
-          <h2 className="text-3xl font-bold text-white text-left mb-12">
+          <h2 className="text-3xl font-bold text-white text-center mb-12">
             Serviços
           </h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
