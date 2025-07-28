@@ -20,6 +20,7 @@ import {
   PhoneIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
+  InformationCircleIcon,
 } from "@heroicons/react/24/solid";
 
 import {
@@ -29,6 +30,10 @@ import {
   CardBody,
   Chip,
   Avatar,
+  Modal,
+  ModalHeader,
+  ModalBody,
+  ModalContent,
 } from "@heroui/react";
 
 export default function HomePage() {
@@ -72,34 +77,41 @@ export default function HomePage() {
 
   const testimonials = [
     {
-      name: "Maria Silva",
-      role: "CEO, Studio Criativo",
-      avatar: "/profile.jpg",
-      text: "Nicole transformou completamente minha presença digital. Seus vídeos não apenas capturam quem eu sou, mas elevam minha marca a um nível que eu nem imaginava ser possível.",
+      name: "Caroline Alvares",
+      role: "Papillon Publicidade",
+      avatar: "/perfil/image2.png",
+      text: "Trabalho excelente. O olhar da Nick é muito apurado, conseguindo além de takes incríveis, mas capturando momentos que transmitem essência. Além da sensibilidade nos takes, a Nick é sensível como humana, deixando todos muito confortáveis no ensaio, conseguindo um resultado ainda mais único.",
     },
     {
-      name: "João Santos",
+      name: "Márcio Beckmann",
+      role: "Marti Vila",
+      avatar: "/perfil/image3.png",
+      text: "Quero agradecer pelo trabalho incrível que você tem feito com as redes! Você é super criativa, comprometida e tem um olhar único que faz toda a diferença. É muito bom contar com alguém que entende a essência da marca e entrega tudo com tanto carinho.",
+    },
+    {
+      name: "Roberta Pavon",
+      role: "Palestrante e sexóloga",
+      avatar: "/perfil/image4.png",
+      text: "A melhor profissional da área. Ela vai comigo em todos os eventos. Super profissional, séria, discreta, presta atenção em todos os detalhes, dá várias dicas, insights, atenta pra pegar momentos únicos e mágicos. Além de ser leve e muito fácil de lidar. Eu sou muito fã da Nicole e recomendo o trabalho dela pra todo mundo.",
+    },
+
+    {
+      name: "Dra. Isabela Capato",
       role: "Dentista",
-      avatar: "/profile.jpg",
-      text: "Trabalhar com a NA foi revelador. Nicole tem um olhar único que fez meus pacientes se conectarem comigo antes mesmo da primeira consulta. Minha agenda nunca esteve tão cheia.",
+      avatar: "/perfil/image5.png",
+      text: "Oi Nic, boa noite ! Eu não poderia deixar de te enviar esse feedback com todo o carinho e gratidão do mundo. Trabalhar com você foi uma experiência incrível em muitos sentidos. Além de todo o seu profissionalismo e competência, algo que realmente me tocou foi o quanto você individualiza cada trabalho, você realmente se entrega, entende o outro e transforma isso em algo único. No meu caso, eu não estava bem emocionalmente, minha autoestima estava muito abalada… E você, com tanta paciência, sensibilidade e dedicação, me fez enxergar meu potencial, minha imagem, minha essência. Isso foi transformador pra mim. Você não só pensou em cada detalhe do vídeo, fez um script totalmente alinhado com a minha fala, com o que eu queria comunicar aos meus pacientes… mas também conseguiu algo que eu nem imaginava: me senti linda, segura, e orgulhosa do resultado final. De verdade, obrigada por tudo. Você é muito mais que uma profissional, é um talento que toca a gente como pessoa também. ❤",
     },
     {
-      name: "Ana Costa",
-      role: "Coach de Carreira",
-      avatar: "/profile.jpg",
-      text: "O diferencial da Nicole está na sensibilidade. Ela não só grava, ela entende sua essência e traduz isso em imagens que tocam e convencem. Meus resultados triplicaram!",
+      name: "Dra. Luciana Villas Bôas",
+      role: "Dermatologista",
+      avatar: "/perfil/image6.png",
+      text: "Nicole vc é maravilhosa, inteligente, criativa, gentil e sempre capta o melhor para transmitir nos seus vídeos. Que capricho e elegância as edições! Parabéns amor, seu trabalho é demais! Obrigada por todo lindo trabalho que fez e faz para mim🤩🤩",
     },
     {
-      name: "Carlos Mendes",
-      role: "Advogado",
-      avatar: "/profile.jpg",
-      text: "A Nicole conseguiu capturar minha seriedade profissional sem perder a humanidade. Os vídeos me ajudaram a conquistar a confiança de clientes antes mesmo do primeiro encontro.",
-    },
-    {
-      name: "Fernanda Lima",
-      role: "Nutricionista",
-      avatar: "/profile.jpg",
-      text: "Com a ajuda da NA audiovisual, meu Instagram se tornou uma ferramenta poderosa de educação e atração de pacientes. A sensibilidade da Nicole fez toda a diferença.",
+      name: "Raimundo",
+      role: "Ragma Seguros",
+      avatar: "/perfil/image1.png",
+      text: "A Nicole consegue naturalmente deixar você calmo e orientar com toda a simpatia e profissionalismo. O melhor caminho para gravar…Ela é uma fera!",
     },
   ];
 
@@ -149,7 +161,7 @@ export default function HomePage() {
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentTestimonial((prev) => (prev + 1) % testimonials.length);
-    }, 5000); // Muda a cada 5 segundos
+    }, 15000); // Muda a cada 10 segundos
 
     return () => clearInterval(interval);
   }, [testimonials.length]);
@@ -197,6 +209,13 @@ export default function HomePage() {
   const goToTestimonial = (index: number) => {
     setCurrentTestimonial(index);
   };
+
+  // modal
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedTestimonial, setSelectedTestimonial] = useState<null | {
+    name: string;
+    text: string;
+  }>(null);
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-stone-900 via-stone-800 to-stone-950">
@@ -429,17 +448,35 @@ export default function HomePage() {
                         {/* Quote */}
                         <blockquote className="text-stone-300 leading-relaxed mb-6 italic relative text-lg">
                           <span className="relative z-10">
-                            " {testimonial.text} "
+                            {testimonial.text.length > 220
+                              ? ` "${testimonial.text.slice(0, 220)}..." `
+                              : ` "${testimonial.text}" `}
                           </span>
+                          {testimonial.text.length > 220 && (
+                            <button
+                              className="ml-2 inline-flex items-center text-blue-400 hover:text-blue-300 transition"
+                              onClick={() => {
+                                setIsModalOpen(true);
+                                setSelectedTestimonial(testimonial);
+                              }}
+                              aria-label="Mostrar mais"
+                              type="button"
+                            >
+                              <InformationCircleIcon className="w-5 h-5" />
+                              <span className="sr-only">Mostrar mais</span>
+                            </button>
+                          )}
                         </blockquote>
 
                         {/* Author */}
                         <div className="flex items-center justify-center gap-4">
-                          <Avatar
-                            src={testimonial.avatar}
-                            alt={testimonial.name}
-                            className="w-16 h-16 border-2 border-stone-300/20"
-                          />
+                          <div>
+                            <Avatar
+                              src={testimonial.avatar}
+                              alt={testimonial.name}
+                              className="w-16 h-16 border-2 border-stone-300/20"
+                            />
+                          </div>
                           <div>
                             <h4 className="text-white font-semibold text-lg">
                               {testimonial.name}
@@ -568,7 +605,6 @@ export default function HomePage() {
                   color="primary"
                   size="lg"
                   onPress={handleFollow}
-                  className="px-8"
                   startContent={<UserIcon className="w-5 h-5" />}
                 >
                   Seguir no Instagram
@@ -589,6 +625,22 @@ export default function HomePage() {
           </Card>
         </section>
       </div>
+      {/* Modal for Testimonials */}
+      <Modal
+        placement="center"
+        isOpen={isModalOpen}
+        onOpenChange={setIsModalOpen}
+        className="bg-stone-900/90 backdrop-blur-sm border border-stone-300/20 text-white p-4"
+      >
+        <ModalContent>
+          {(onClose) => (
+            <>
+              <ModalHeader>{selectedTestimonial?.name}</ModalHeader>
+              <ModalBody>{selectedTestimonial?.text}</ModalBody>
+            </>
+          )}
+        </ModalContent>
+      </Modal>
     </main>
   );
 }
